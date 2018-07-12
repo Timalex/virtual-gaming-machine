@@ -1,0 +1,112 @@
+kbd.key {
+    border: 1px solid #333;
+    font-size: 0.9em;
+    box-shadow: 1px 0 1px 0 #eee, 0 2px 0 2px #ccc, 0 2px 0 3px #444;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin: 2px 3px;
+    padding: 0px 2px;
+}
+
+ol,
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+li li {
+    display: inline-block;
+}
+
+i {
+    font-size: smaller;
+}
+
+/* dicreet highlight */
+kbd>samp {}
+
+li li+li::before {
+    content: '→';
+    margin-right: 0.25em;
+    color: darkgray;
+}
+
+/* Replace list arrow with key */
+
+li::before span.kbd-button {
+    content: '';
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'PT Serif';
+}
+
+body {
+    margin: auto;
+    max-width: 640px;
+    /* Consider mobile version */
+    font-family: 'PT Sans';
+    color: #4a4641;
+    /* user-select: none; */
+}
+
+samp {
+    font-family: 'Source Code Pro';
+    font-size: small;
+}
+
+.yellow {
+    color: #fce94f
+}
+
+.lavender {
+    color: #ad7faa
+}
+
+.salmon {
+    color: #ffd7df
+}
+
+body {
+    background-color: #EAE6DC;
+    background-image: url(paper.svg);
+}
+
+terminal-edit+small,
+terminal-cli+small {
+    display: block;
+    font-style: italic;
+    margin-bottom: 1em;
+}
+
+.file-name {
+    font-size: smaller;
+    margin-bottom: 0;
+    border: solid black;
+    border-width: 1px 1px 0;
+    border-radius: 0.29em 0.29em 0 0;
+    padding-left: 0.2em;
+    width: 600px;
+}
+
+.recommended {
+    border-color: lawngreen;
+}
+
+/* Typing animation */
+
+.typing {
+    color: gray;
+}
+
+.comment  {
+    font-size: 0.7em;
+    font-style: italic;
+}
+
+:target {
+    text-decoration: underline;
+}

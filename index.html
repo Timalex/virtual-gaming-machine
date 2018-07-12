@@ -4,11 +4,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPU Passthrough Guide</title>
+    <script src="terminal/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans%7CPT+Serif" rel="stylesheet">
+    <title>Gaming VMs: The Trivial Guide™</title>
 </head>
 
+<!-- Replace <small> likely with <p>-->
 <body>
-    <h1>The trivial guide to GPU passthrough</h1>
-</body>
+    <template id="terminal-edit">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+        <link href="terminal/edit.css" rel="stylesheet">
+        <samp>
+            <slot></slot>
+        </samp>
+    </template>
+    <template id="terminal-cli">
+        <link href="terminal/cli.css" rel="stylesheet">
+        <span id="prompt">
+            <span id="user">user</span><span id="at">@</span><span id="host">host</span>
+            <span id="dir">~</span>
+            <span id="symbol">$</span>
+        </span>
+    </template>
 
+    <h1>The Trivial Guide™ to<br/>Virtual Machines for Gaming</h1>
+    <h2>Hardware virtualization extensions</h2>
+    <!-- Add AMD equivalent  -->
+    Example motherboard <i>ASUS Z170-P</i> 
+    <!-- Restore hierarchy -->
+    <ol>
+        <li>
+            <kbd class="key">F2</kbd> Enter BIOS at startup
+        </li>
+        <li>
+            <kbd class="key">F7</kbd>
+            <samp>Advanced Mode</samp>
+        </li>
+        <li>
+            <kbd>
+                <samp>Advanced</samp>
+            </kbd>
+            <ol>
+                <li>
+                    <kbd> <samp>CPU Configuration</samp> </kbd>
+                    <ol> <li> <kbd> <samp> <b>Enable</b> </samp> </kbd> <kbd> <samp>Intel Virtualization Technology</samp> </kbd> </li> </ol>
+                </li>
+            </ol>
+            <ol>
+                <li> <kbd> <samp>System Agent (SA) Configuration</samp> </kbd>
+                    <ol> <li> <kbd> <samp> <b>Enable</b> </samp> </kbd> <kbd> <samp>VT-d</samp> <small>(IOMMU)</small> </kbd> </li> </ol>
+                </li>
+            </ol>
+            </li>
+            <li>
+                <kbd class="key">F10</kbd> Save &amp; restart
+            </li>
+    </ol>
+
+    <!--     Tip: Alt + F2: term (confirm)
+    Alternatively Super: term
+ -->
+    <h3>Verifying IOMMU</h3>
+
+    <!-- add typing effect -->
+    <terminal-cli>
+        <kbd>ls /sys/class/iommu</kbd>
+        <br/>
+        <b>dmar0</b>
+    </terminal-cli>
+    <small>Verify presence of <abbr title="I/O Memory Management Unit">IOMMU</abbr> by successfully listing any units</small>
+
+    <!-- <h2>Virtual Function I/O</h2> -->
+    <h2>Driver interception</h2>
+
+    <p>
+    <terminal-cli>
+        <kbd>mkdir /etc/modprobe.d</kbd>
+    </terminal-cli>
+    <small>Make the directory modprobe.d in /etc</small>
+    </p>
+
+    <terminal-cli>
+        <kbd>sudo vim /etc/modprobe.d/intercept.conf</kbd>
+    </terminal-cli>
+    <small>Create a new configuration file</small>
+
+    <terminal-edit>
+        <kbd>
+            <span class="yellow">install</span> nvidia "/sbin/intercept-vfio-nvidia.sh"
+            <br/><span class="yellow">install</span> snd_hda_intel "/sbin/intercept-vfio-intel-audio.sh"
+        </kbd>
+    </terminal-edit>
+    <small>Refer to shell scripts that should run a custom installation</small>
+
+    <terminal-cli>
+        <kbd>sudo vim /sbin/intercept-vfio-nvidia.sh</kbd>
+    </terminal-cli>
+    <small>Create a new shell script</small>
+
+    <terminal-edit>
+        <kbd>
+            <span class="yellow">echo</span>
+            <span class="lavender">vfio-pci</span>
+            <span class="yellow">></span> /sys/bus/pci/devices/0000:07:00.<span class="lavender">0</span>/driver_override;
+            <br/>modprobe vfio-pci;
+            <br/>modprobe <span class="salmon">--ignore-install</span> nvidia;
+        </kbd>
+    </terminal-edit>
+    <small>Override the graphics driver with the vfio-pci module, then install any remaining graphics as normal</small>
+
+    <terminal-cli>
+        <kbd>sudo vim /sbin/intercept-vfio-intel-audio.sh</kbd>
+    </terminal-cli>
+    <small>Edit a new shell script</small>
+
+    <terminal-edit>
+        <kbd>
+            <span class="yellow">echo</span>
+            <span class="lavender">vfio-pci</span>
+            <span class="yellow">></span> /sys/bus/pci/devices/0000:07:00.<span class="lavender">1</span>/driver_override;
+            <br/>modprobe vfio-pci;
+            <br/>modprobe <span class="salmon">--ignore-install</span> snd_hda_intel;
+        </kbd>
+    </terminal-edit>
+    <small>Override the HDMI audio driver and install any remaining compatible audio as normal</small>
+
+    <terminal-cli>
+        <kbd>sudo chmod +x /sbin/intercept-vfio-nvidia.sh</kbd>
+    </terminal-cli>
+    <terminal-cli>
+        <kbd>sudo chmod +x /sbin/intercept-vfio-intel-audio.sh</kbd>
+    </terminal-cli>
+    <small>Change file modes to allow the scripts to be executed</small>
+
+    <h2>Virtual Machine Manager</h2>
+
+    <h3>Phase 1</h3>
+
+    <p>Download 64-bit <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a></p>
+    <p>Optionally download <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">drivers</a> for <a href="#virtio">VirtIO devices</a> <small class="comment">Direct link from Fedora</small></p>
+
+    <terminal-cli><kbd>sudo eopkg install virt-manager</kbd></terminal-cli>
+    <small>Install Virtual Machine Manager</small>
+
+    <terminal-cli><kbd>sudo eopkg install ovmf</kbd></terminal-cli>
+    <small>Install Open Virtual Machine Firmware</small>
+
+    <terminal-cli><kbd>sudo systemctl start libvirtd.service</kbd></terminal-cli>
+    <small>Start the libvirt daemon now</small>
+
+    <terminal-cli class="recommended"></terminal-cliclass><kbd>sudo systemctl enable libvirtd.service</kbd></terminal-cli>
+    <small> Enable autostart of the libvirt daemon</small>
+
+    <!-- <terminal-cli class="recommended"><kbd>sudo mv ~/Downloads/Win10_1803_EnglishInternational_x64.iso /var/lib/libvirt/images</kbd></terminal-cli> -->
+    <terminal-cli class="recommended"><kbd>sudo mv ~/Downloads/*.iso /var/lib/libvirt/images</kbd></terminal-cli>
+    <small>Move all downloaded iso files to a more convenient directory</small>
+
+    <p><kbd class="key">Alt</kbd> + <kbd class="key">F2</kbd> <kbd class="typing">vir</kbd></p></body>
+    <h3>Virtual Machine Creation</h3>
+
+    <ol>
+        <li>
+            <ol>
+                <li><kbd><samp>File</samp></kbd></li>
+                <li><kbd><samp>New Virtual Machine</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Browse...</samp></kbd></li>
+                <li><i>Select the Win10 iso</i></li>
+                <li><kbd><samp>Choose Volume</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>☐</samp></kbd> <samp>Automatically detect operating system based on install media</samp></li>
+                <li><samp>OS type: </samp><kbd><samp>Windows</samp></kbd></li>
+            </ol> 
+        </li>
+        <li>
+            <kbd><samp>☑</samp></kbd> <samp>Customize configuration before install</samp>
+        </li>
+    </ol>
+    <h4>Configuration customization</h4>
+    <ol>
+        <li>
+            <ol>
+                <li><kbd><samp>Overview</samp></kbd></li>
+                <li><samp>Firmware:</samp> <kbd><samp>UEFI x86_64: /usr/share/OVMF/OVMF_CODE.fd</samp></kbd></li>
+                <li><samp>Chipset:</samp> <kbd><samp>Q35</samp></kbd></li>
+            </ol>
+        </li>
+        <li class="recommended">
+            <ol>
+                <li><kbd><samp>CPUs</samp></kbd></li>
+                <li><samp>Model:</samp> <kbd class="typing">host-passthrough</kbd> <small class="comment">You can just type it</small></li>
+            </ol>
+            <small class="comment">Passthrough the CPU with all it's features</small>
+        </li>
+        <li class="recommended">
+            <ol>
+                <li><kbd><samp>Boot options</samp></kbd></li>
+                <li><kbd><samp>☑</samp></kbd> <samp>Disk 1</samp></li>
+                <li><kbd><samp>☑</samp></kbd> <samp>CDROM 1</samp></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>CDROM 1</samp></kbd></li>
+                <li><kbd><samp>Advanced options</samp></kbd></li>
+                <li><samp>Disk bus:</samp> <kbd><samp>SATA</samp></kbd></li>
+            </ol>
+            <ol>
+                <li><kbd><samp>Disk 1</samp></kbd></li>
+                <li><kbd><samp>Advanced options</samp></kbd></li>
+                <li><samp>Disk bus:</samp> <kbd><samp>SATA</samp></kbd> <i>or..</i></li>
+            </ol>
+    </ol>
+
+    <!-- <p>-> -> (defaults Win10)</p> -->
+    <!-- <p>Uncheck automatically detect operating system... -> OS type: Windows -> (defaults Win10)</p> -->
+
+    <h4 id="virtio">VirtIO Devices (Optional)</h4>
+    <div class="recommended">
+        <!-- <p>
+            Improve device efficiency with VirtIO
+            Let all possible devices use VirtIO to reduce virtualization overhead for those devices. (Reformulate more concisely)
+        </p> -->
+        <ul>
+            <li>
+                <ol>
+                    <li><kbd><samp>Disk 1</samp></kbd></li>
+                    <li><kbd><samp>Advanced options</samp></kbd></li>
+                    <li><samp>Disk bus:</samp> <kbd><samp>VirtIO</samp></kbd></li>
+                </ol>
+            </li>
+            <li>
+                <ol>
+                    <li><kbd><samp>NIC</samp></kbd></li>
+                    <li><samp>Device model:</samp> <kbd><samp>virtio</samp></kbd></li>
+                </ol>
+            </li>
+            <li>
+                <ol>
+                    <li><kbd><samp>Video QXL</samp></kbd></li>
+                    <li><samp>Model:</samp> <kbd><samp>Virtio</samp></kbd></li>
+                </ol>
+            </li>
+        </ul>
+        <ol>
+            <li>
+                <ol>
+                    <li><kbd><samp>Add Hardware</samp></kbd></li>
+                    <li><kbd><samp>Storage</samp></kbd></li>
+                    <li><samp>Device type:</samp> <kbd><samp>CDROM device</samp></kbd></li>
+                </ol>
+            </li>
+            <li>
+                <ol>
+                    <!-- <li>
+                        <kbd><samp>🔘</samp></kbd>
+                        <samp>Select or create custom storage</samp>
+                    </li> -->
+                    <li><kbd><samp>Manage...</samp></kbd></li>
+                    <li><i>Select the virtio-win iso</i></li>
+                    <li><kbd><samp>Choose Volume</samp></kbd></li>
+                </ol>
+            </li>
+        </ol>
+        <h3>Windows installation</h3>
+        <ol>
+            <li><kbd><samp>✔ Begin Installation</samp></kbd></li>
+        </ol>
+    </div>
+     
 </html>

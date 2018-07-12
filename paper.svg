@@ -1,0 +1,12 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    <defs>
+        <filter id="roughpaper">
+            <feTurbulence baseFrequency="0.04" numOctaves="4" result="noise" type="fractalNoise"/>
+            <feDiffuseLighting diffuseConstant="1" lighting-color="floralwhite" result="diffLight" surfaceScale="0.5">
+                <feDistantLight azimuth="45" elevation="55"/>
+            </feDiffuseLighting>
+        </filter>
+    </defs>
+    <rect width="100%" height="100%" fill="grey" filter="url(#roughpaper)"/>
+</svg>

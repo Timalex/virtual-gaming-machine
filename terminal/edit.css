@@ -1,0 +1,20 @@
+/* Add transparency and shadow */
+:host {
+    display: block;
+    box-sizing: border-box;
+    margin-top: 1px;
+    padding: 0.1em 0.4em;
+    width: 80ch;
+    border: 1px solid #5fd7f580;
+    border-radius: 0.2em;
+    color: #34E2E2;
+    background-color: #404B50; /* Decrease contrast with page */
+    font-family: 'Source Code Pro', monospace;
+    font-size: small;
+}
+
+::slotted(kbd) {
+    color: #CFD8DC;
+    font-family: 'Source Code Pro', monospace;
+    font-size: small;
+}
