@@ -73,23 +73,22 @@
         <br/>
         <b>dmar0</b>
     </terminal-cli>
-    <small>Verify presence of <abbr title="I/O Memory Management Unit">IOMMU</abbr> by successfully listing any units</small>
+    <small>Ensure <abbr title="I/O Memory Management Unit">IOMMU</abbr> is enabled by successfully listing any units</small>
 
     <!-- <h2>Virtual Function I/O</h2> -->
     <h2>Driver interception</h2>
 
-    <p>
     <terminal-cli>
         <kbd>mkdir /etc/modprobe.d</kbd>
     </terminal-cli>
     <small>Make the directory modprobe.d in /etc</small>
-    </p>
 
     <terminal-cli>
         <kbd>sudo vim /etc/modprobe.d/intercept.conf</kbd>
     </terminal-cli>
     <small>Create a new configuration file</small>
 
+    <!-- Indent terminal-edits -->
     <terminal-edit>
         <kbd>
             <span class="yellow">install</span> nvidia "/sbin/intercept-vfio-nvidia.sh"
@@ -151,19 +150,22 @@
     <terminal-cli><kbd>sudo eopkg install ovmf</kbd></terminal-cli>
     <small>Install Open Virtual Machine Firmware</small>
 
-    <terminal-cli><kbd>sudo systemctl start libvirtd.service</kbd></terminal-cli>
-    <small>Start the libvirt daemon now</small>
+    <!-- <terminal-cli><kbd>sudo systemctl start libvirtd.service</kbd></terminal-cli>
+    <small>Start the libvirt daemon now</small> -->
 
-    <terminal-cli class="recommended"></terminal-cliclass><kbd>sudo systemctl enable libvirtd.service</kbd></terminal-cli>
-    <small> Enable autostart of the libvirt daemon</small>
+    <!-- <terminal-cli class="recommended"></terminal-cliclass><kbd>sudo systemctl enable libvirtd.service</kbd></terminal-cli>
+    <small>Enable autostart of the libvirt daemon and start it now</small> -->
+
+    <terminal-cli><kbd>sudo systemctl enable --now libvirtd.service</kbd></terminal-cli>
+    <small>Start the libvirt daemon now and enable autostart</small>
 
     <!-- <terminal-cli class="recommended"><kbd>sudo mv ~/Downloads/Win10_1803_EnglishInternational_x64.iso /var/lib/libvirt/images</kbd></terminal-cli> -->
-    <terminal-cli class="recommended"><kbd>sudo mv ~/Downloads/*.iso /var/lib/libvirt/images</kbd></terminal-cli>
+    <terminal-cli><kbd>sudo mv ~/Downloads/*.iso /var/lib/libvirt/images</kbd></terminal-cli>
     <small>Move all downloaded iso files to a more convenient directory</small>
 
     <p><kbd class="key">Alt</kbd> + <kbd class="key">F2</kbd> <kbd class="typing">vir</kbd></p></body>
     <h3>Virtual Machine Creation</h3>
-
+    <p><em>Go ahead and proceed unless mentioned</em></p>
     <ol>
         <li>
             <ol>
@@ -174,15 +176,16 @@
         <li>
             <ol>
                 <li><kbd><samp>Browse...</samp></kbd></li>
-                <li><i>Select the Win10 iso</i></li>
-                <li><kbd><samp>Choose Volume</samp></kbd></li>
+                <li><i><samp>Choose</samp> the Win10 iso</i></li>
             </ol>
         </li>
         <li>
-            <ol>
-                <li><kbd><samp>☐</samp></kbd> <samp>Automatically detect operating system based on install media</samp></li>
-                <li><samp>OS type: </samp><kbd><samp>Windows</samp></kbd></li>
-            </ol> 
+            <ul>
+                <li><samp>Memory (RAM):</samp> <kbd>4096</kbd></li>
+                <li><samp>CPUs:</samp> <kbd>2</kbd></li>
+                <li><kbd>40</kbd> <samp>GiB</samp></li>
+                <small class="comment">Increase them as much as you are comfortable with</small>
+            </ul>
         </li>
         <li>
             <kbd><samp>☑</samp></kbd> <samp>Customize configuration before install</samp>
@@ -197,37 +200,42 @@
                 <li><samp>Chipset:</samp> <kbd><samp>Q35</samp></kbd></li>
             </ol>
         </li>
-        <li class="recommended">
+        <!-- <li class="recommended">
             <ol>
                 <li><kbd><samp>CPUs</samp></kbd></li>
                 <li><samp>Model:</samp> <kbd class="typing">host-passthrough</kbd> <small class="comment">You can just type it</small></li>
             </ol>
             <small class="comment">Passthrough the CPU with all it's features</small>
-        </li>
+        </li> -->
         <li class="recommended">
             <ol>
                 <li><kbd><samp>Boot options</samp></kbd></li>
+                <!-- <li><kbd><samp>☑</samp></kbd> <samp>Enable boot menu</samp></li> -->
                 <li><kbd><samp>☑</samp></kbd> <samp>Disk 1</samp></li>
                 <li><kbd><samp>☑</samp></kbd> <samp>CDROM 1</samp></li>
             </ol>
         </li>
         <li>
+            
             <ol>
                 <li><kbd><samp>CDROM 1</samp></kbd></li>
                 <li><kbd><samp>Advanced options</samp></kbd></li>
                 <li><samp>Disk bus:</samp> <kbd><samp>SATA</samp></kbd></li>
             </ol>
+        </li>
+        <li>
             <ol>
                 <li><kbd><samp>Disk 1</samp></kbd></li>
                 <li><kbd><samp>Advanced options</samp></kbd></li>
                 <li><samp>Disk bus:</samp> <kbd><samp>SATA</samp></kbd> <i>or..</i></li>
             </ol>
+        </li>
     </ol>
 
     <!-- <p>-> -> (defaults Win10)</p> -->
     <!-- <p>Uncheck automatically detect operating system... -> OS type: Windows -> (defaults Win10)</p> -->
 
-    <h4 id="virtio">VirtIO Devices (Optional)</h4>
+    <h4 id="virtio">VirtIO Devices (optional)</h4>
     <div class="recommended">
         <!-- <p>
             Improve device efficiency with VirtIO
@@ -247,12 +255,12 @@
                     <li><samp>Device model:</samp> <kbd><samp>virtio</samp></kbd></li>
                 </ol>
             </li>
-            <li>
+            <!-- <li>
                 <ol>
                     <li><kbd><samp>Video QXL</samp></kbd></li>
                     <li><samp>Model:</samp> <kbd><samp>Virtio</samp></kbd></li>
                 </ol>
-            </li>
+            </li> -->
         </ul>
         <ol>
             <li>
@@ -260,24 +268,149 @@
                     <li><kbd><samp>Add Hardware</samp></kbd></li>
                     <li><kbd><samp>Storage</samp></kbd></li>
                     <li><samp>Device type:</samp> <kbd><samp>CDROM device</samp></kbd></li>
-                </ol>
-            </li>
-            <li>
-                <ol>
-                    <!-- <li>
-                        <kbd><samp>🔘</samp></kbd>
-                        <samp>Select or create custom storage</samp>
-                    </li> -->
                     <li><kbd><samp>Manage...</samp></kbd></li>
-                    <li><i>Select the virtio-win iso</i></li>
-                    <li><kbd><samp>Choose Volume</samp></kbd></li>
+                    <li><i><samp>Choose</samp> the virtio-win iso</i></li>
                 </ol>
             </li>
         </ol>
         <h3>Windows installation</h3>
-        <ol>
+       <ol>
             <li><kbd><samp>✔ Begin Installation</samp></kbd></li>
+            <li><samp>Press any key to boot from CD or DVD</samp></li>
         </ol>
+
+        <p><em>If you're too late on your first attempt, do the following:</em></p>
+        <ol>
+            <li>
+                <ol>
+                    <li><kbd><samp>Virtual Machine</samp></kbd></li>
+                    <li><kbd><samp>Shutdown</samp></kbd></li>
+                    <li><kbd><samp>Force off</samp></kbd></li>
+                </ol>
+            </li>
+            <li>
+                <ol>
+                    <li><kbd><samp>View</samp></kbd></li>
+                    <li><kbd><samp>🔘 Details</samp></kbd></li>
+                </ol>
+            </li>
+            <li>
+                <ol>
+                    <li><kbd><samp>CDROM 1</samp></kbd></li>
+                    <li><kbd><samp>Connect</samp></kbd></li>
+                    <li><kbd><samp>Browse...</samp></kbd></li>
+                    <li><i><samp>Choose</samp> the Win10 iso</i></li>
+                </ol>
+            </li>
+            <li>
+                <ol>
+                    <li><kbd><samp>View</samp></kbd></li>
+                    <li><kbd><samp>🔘 Console</samp></kbd></li>
+                </ol>
+                <ol>
+                    <li><kbd><samp>Virtual Machine</samp></kbd></li>
+                    <li><kbd><samp>Run</samp></kbd></li>
+                </ol>
+            </li>
+        </ol>
+        
     </div>
      
+    <h4>Windows Setup</h4>
+    
+    <ol>
+        <li>
+            <ol>
+                <li><kbd><samp>View</samp></kbd></li>
+                <li><kbd><samp>Resize to VM</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <!-- <kbd class="key">Alt</kbd> + <kbd class="key">I</kbd> -->
+            <kbd><samp>I don´t have a product key</samp></kbd> 
+            <small class="comment">It's more reliable to do this after the hardware stops changing</small>
+        </li>
+        <li>
+            <!-- <kbd class="key">Alt</kbd> + <kbd class="key">C</kbd> -->
+            <kbd><samp>Custom: Install Windows only (advanced)</samp></kbd>
+        </li>
+    </ol>
+    <h5>Loading VFIO drivers (optional)</h5>
+    <!-- Add memory balooning -->
+    <!-- <ol>
+        <li>
+            <kbd class="key">Alt</kbd> + <kbd class="key">L</kbd>
+            <kbd><samp>Load driver</samp></kbd>
+        </li>
+        <li>
+            <kbd class="key">Alt</kbd> + <kbd class="key">B</kbd>
+            <kbd><samp>Browse</samp></kbd>
+        </li>
+        <li>
+            <ol>
+                <li><i>Select <samp>CD Drive (E:) virtio-win</samp></i></li>
+                <li>viostor</li>
+                <li>w10</li>
+                <li>amd64</li>
+            </ol>
+            
+        </li>
+    </ol>
+    <ol>
+        <li>
+            <kbd class="key">Alt</kbd> + <kbd class="key">L</kbd>
+            <kbd><samp>Load driver</samp></kbd>
+        </li>
+        <li>
+            <kbd class="key">Alt</kbd> + <kbd class="key">B</kbd>
+            <kbd><samp>Browse</samp></kbd>
+        </li>
+        <li>
+            <ol>
+                <li><i>Select <samp>CD Drive (E:) virtio-win</samp></i></li>
+                <li>NetKVM</li>
+                <li>w10</li>
+                <li>amd64</li>
+            </ol>
+        </li>
+    </ol> -->
+    <ol>
+        <li>
+            <ol>
+                <li><kbd><samp>Load driver</samp></kbd></li>
+                <li><kbd><samp>Browse</samp></kbd></li>
+                <li><kbd><samp>CD Drive (E:) virtio-win</samp></kbd></li>
+                <li><kbd><samp>viostor</samp></kbd></li>
+                <li><kbd><samp>w10</samp></kbd></li>
+                <li><kbd><samp>amd64</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Load driver</samp></kbd></li>
+                <li><kbd><samp>Browse</samp></kbd></li>
+                <li><kbd><samp>CD Drive (E:) virtio-win</samp></kbd></li>
+                <li><kbd><samp>NetKVM</samp></kbd></li>
+                <li><kbd><samp>w10</samp></kbd></li>
+                <li><kbd><samp>amd64</samp></kbd></li>
+            </ol>
+        </li>
+    </ol>
+    <h5>Account (Optional)</h5>
+    <ol>
+        <li><kbd><samp>Offline account</samp></kbd></li>
+        <li><samp>Sign in with Microsoft Instead?</samp> <kbd><samp>No</samp></kbd></li>
+        <li><samp>Create a really memorable password</samp> <kbd><samp>Next</samp></kbd></li>
+    </ol>
+    <h5>Services (optional)</h5>
+    <p><em>Protect your data/integrity. Just say no.</em></p>
+    <ol>
+        <li><samp>Do more with your voice</samp> <strong><kbd><samp>Don't use speech recognition</samp></kbd></strong></li>
+        <li><samp>Let Microsoft use your location</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
+        <li><samp>Find my device</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
+        <li><samp>Send diagnostic data to Microsoft</samp> <strong><kbd><samp>Basic</samp></kbd></strong></li>
+        <li><samp>Improve inking & typing recognition</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
+        <li><samp>Get tailored experiences with diagnostic data</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
+        <li><samp>Let apps use advertising ID</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
+    </ol>
 </html>
