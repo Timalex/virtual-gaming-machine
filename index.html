@@ -32,34 +32,35 @@
     <h2>Hardware virtualization extensions</h2>
     <!-- Add AMD equivalent  -->
     Example motherboard <i>ASUS Z170-P</i> 
-    <!-- Restore hierarchy -->
-    <ol>
+    <ol class="sub-structured">
         <li>
             <kbd class="key">F2</kbd> Enter BIOS at startup
         </li>
         <li>
             <kbd class="key">F7</kbd>
             <samp>Advanced Mode</samp>
-        </li>
-        <li>
-            <kbd>
-                <samp>Advanced</samp>
-            </kbd>
             <ol>
                 <li>
-                    <kbd> <samp>CPU Configuration</samp> </kbd>
-                    <ol> <li> <kbd> <samp> <b>Enable</b> </samp> </kbd> <kbd> <samp>Intel Virtualization Technology</samp> </kbd> </li> </ol>
+                    <kbd>
+                        <samp>Advanced</samp>
+                    </kbd>
+                    <ol>
+                        <li>
+                            <kbd> <samp>CPU Configuration</samp> </kbd>
+                            <ol> <li> <kbd> <samp> <b>Enable</b> </samp> </kbd> <kbd> <samp>Intel Virtualization Technology</samp> </kbd> </li> </ol>
+                        </li>
+                    </ol>
+                    <ol>
+                        <li> <kbd> <samp>System Agent (SA) Configuration</samp> </kbd>
+                            <ol> <li> <kbd> <samp> <b>Enable</b> </samp> </kbd> <kbd> <samp>VT-d</samp> <small>(IOMMU)</small> </kbd> </li> </ol>
+                        </li>
+                    </ol>
                 </li>
             </ol>
-            <ol>
-                <li> <kbd> <samp>System Agent (SA) Configuration</samp> </kbd>
-                    <ol> <li> <kbd> <samp> <b>Enable</b> </samp> </kbd> <kbd> <samp>VT-d</samp> <small>(IOMMU)</small> </kbd> </li> </ol>
-                </li>
-            </ol>
-            </li>
-            <li>
-                <kbd class="key">F10</kbd> Save &amp; restart
-            </li>
+        </li>
+        <li>
+            <kbd class="key">F10</kbd> Save &amp; restart
+        </li>
     </ol>
 
     <!--     Tip: Alt + F2: term (confirm)
@@ -163,7 +164,7 @@
     <terminal-cli><kbd>sudo mv ~/Downloads/*.iso /var/lib/libvirt/images</kbd></terminal-cli>
     <small>Move all downloaded iso files to a more convenient directory</small>
 
-    <p><kbd class="key">Alt</kbd> + <kbd class="key">F2</kbd> <kbd class="typing">vir</kbd></p></body>
+    <p><kbd class="key">Alt</kbd> + <kbd class="key">F2</kbd> <kbd class="typing">vir</kbd></p>
     <h3>Virtual Machine Creation</h3>
     <p><em>Go ahead and proceed unless mentioned</em></p>
     <ol>

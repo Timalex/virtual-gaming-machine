@@ -110,3 +110,7 @@ terminal-cli+small {
 :target {
     text-decoration: underline;
 }
+
+.sub-structured ol {
+    padding-left: 2em;
+}
