@@ -118,3 +118,53 @@ terminal-cli+small {
 .sub-structured ol li::before{
     content: '⇒'
 }
+
+.xml {
+    display: block;
+    color: gray;
+}
+
+.xml span {
+    display: block;
+    margin-left: 1em;
+}
+
+.contrast {
+    color: white;
+}
+
+.virsh {
+    color: white;
+}
+
+.virsh samp div{
+    white-space: pre;
+    font-size: medium;
+}
+
+terminal-cli samp {
+    color: #CFD8DC;
+}
+
+mark {
+    background: none;
+    color: #CFD8DC;
+    font-style: italic;
+}
+
+.table {
+    display: table;
+}
+.table div {
+    display: table-row;
+}
+.table div>span {
+    display: table-cell;
+}
+.table div span:first-child {
+    width: 7ch;
+}
+
+.notice-difference {
+    text-decoration: underline;
+}

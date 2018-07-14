@@ -75,39 +75,65 @@
         <b>dmar0</b>
     </terminal-cli>
     <small>Ensure <abbr title="I/O Memory Management Unit">IOMMU</abbr> is enabled by successfully listing any units</small>
+    <!-- Mention pasting with Ctrl + Shift + V -->
 
     <!-- <h2>Virtual Function I/O</h2> -->
     <h2>Driver interception</h2>
+    <p>Overriding a normal driver with vfio-pci is necessary to pass the device into the VM later on.</p>
+    <p>The following somewhat novel approach has a simpler way to load the vfio-pci driver early.</p>
 
     <terminal-cli>
-        <kbd>mkdir /etc/modprobe.d</kbd>
+        <kbd>lspci | grep VGA</kbd>
+        <samp>
+            <div>01:00.0 VGA compatible controller: nVidia Corporation G84 [GeForce 8600 GTS] (rev a1)</div>
+        </samp>
+    </terminal-cli>
+    <small>List PCI video devices</small>
+    <!-- <small>Only list VGA controllers among PCI hardware</small> -->
+
+    <terminal-cli>
+        <kbd>lspci -ks 01:00</kbd>
+        <samp>
+            <div>VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)</div>
+            <div>Subsystem: Micro-Star International Co., Ltd. [MSI] GP107 [GeForce GTX 1050 Ti]</div>
+            <div>Kernel driver in use: nvidia</div>
+            <div>01:00.1 Audio device: NVIDIA Corporation GP107 HDMI Audio Controller (rev a1)</div>
+            <div>Subsystem: Micro-Star International Co., Ltd. [MSI] GP107 HDMI Audio Controller</div>
+            <div>Kernel driver in use: snd_hda_intel</div>
+        </samp>
+    </terminal-cli>
+    <small>Show kernel drivers in use on the selected bus and slot</small>
+    <!-- <small>Only list VGA controllers among PCI hardware</small> -->
+
+    <terminal-cli>
+        <kbd>sudo mkdir /etc/modprobe.d</kbd>
     </terminal-cli>
     <small>Make the directory modprobe.d in /etc</small>
 
     <terminal-cli>
         <kbd>sudo vim /etc/modprobe.d/intercept.conf</kbd>
     </terminal-cli>
-    <small>Create a new configuration file</small>
+    <small>Edit a new configuration file</small>
 
-    <!-- Indent terminal-edits -->
+    <!-- Indicate terminal-edits belongs to previous terminal-cli -->
     <terminal-edit>
         <kbd>
             <span class="yellow">install</span> nvidia "/sbin/intercept-vfio-nvidia.sh"
             <br/><span class="yellow">install</span> snd_hda_intel "/sbin/intercept-vfio-intel-audio.sh"
         </kbd>
     </terminal-edit>
-    <small>Refer to shell scripts that should run a custom installation</small>
+    <small>Refer to shell scripts that should run a custom module installation</small>
 
     <terminal-cli>
         <kbd>sudo vim /sbin/intercept-vfio-nvidia.sh</kbd>
     </terminal-cli>
-    <small>Create a new shell script</small>
+    <small>Edit a new shell script</small>
 
     <terminal-edit>
         <kbd>
             <span class="yellow">echo</span>
             <span class="lavender">vfio-pci</span>
-            <span class="yellow">></span> /sys/bus/pci/devices/0000:07:00.<span class="lavender">0</span>/driver_override;
+            <span class="yellow">></span> /sys/bus/pci/devices/0000:0<span class="specific-case">1</span>:00.<span class="lavender">0</span>/driver_override;
             <br/>modprobe vfio-pci;
             <br/>modprobe <span class="salmon">--ignore-install</span> nvidia;
         </kbd>
@@ -123,7 +149,7 @@
         <kbd>
             <span class="yellow">echo</span>
             <span class="lavender">vfio-pci</span>
-            <span class="yellow">></span> /sys/bus/pci/devices/0000:07:00.<span class="lavender">1</span>/driver_override;
+            <span class="yellow">></span> /sys/bus/pci/devices/0000:0<span class="specific-case">1</span>:00.<span class="lavender">1</span>/driver_override;
             <br/>modprobe vfio-pci;
             <br/>modprobe <span class="salmon">--ignore-install</span> snd_hda_intel;
         </kbd>
@@ -137,11 +163,48 @@
         <kbd>sudo chmod +x /sbin/intercept-vfio-intel-audio.sh</kbd>
     </terminal-cli>
     <small>Change file modes to allow the scripts to be executed</small>
+    
+    <terminal-cli>
+        <kbd>sudo shutdown -r now</kbd>
+    </terminal-cli>
+    <small>Reboot now</small>
+
+    <terminal-cli>
+        <kbd>lspci -ks 01:00</kbd>
+        <!-- Fade sample output except keywords -->
+        <samp class="table">
+            <div>
+                <span>01:00.1</span>
+                <span>VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)</span>
+            </div>
+            <div>
+                <span></span>
+                <span>Subsystem: Micro-Star International Co., Ltd. [MSI] GP107 [GeForce GTX 1050 Ti]</span>
+            </div>
+            <div>
+                <span></span>
+                <span>Kernel driver in use: <span class="notice-difference">vfio-pci</span></span>
+            </div>
+            <div>
+                <span>01:00.1</span>
+                <span>Audio device: NVIDIA Corporation GP107 HDMI Audio Controller (rev a1)</span>
+            </div>
+            <div>
+                <span></span>
+                <span>Subsystem: Micro-Star International Co., Ltd. [MSI] GP107 HDMI Audio Controller</span>
+            </div>
+            <div>
+                <span></span>
+                <span>Kernel driver in use: <span class="notice-difference">vfio-pci</span></span>
+            </div>
+        </samp>
+    </terminal-cli>
+    <small>Show kernel drivers in use on the selected bus and slot</small>
+    <!-- <small>Only list VGA controllers among PCI hardware</small> -->
 
     <h2>Virtual Machine Manager</h2>
 
     <h3>Phase 1</h3>
-
     <p>Download 64-bit <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a></p>
     <p>Optionally download <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">drivers</a> for <a href="#virtio">VirtIO devices</a> <small class="comment">Direct link from Fedora</small></p>
 
@@ -165,6 +228,7 @@
     <small>Move all downloaded iso files to a more convenient directory</small>
 
     <p><kbd class="key">Alt</kbd> + <kbd class="key">F2</kbd> <kbd class="typing">vir</kbd></p>
+
     <h3>Virtual Machine Creation</h3>
     <p><em>Go ahead and proceed unless mentioned</em></p>
     <ol>
@@ -192,6 +256,7 @@
             <kbd><samp>☑</samp></kbd> <samp>Customize configuration before install</samp>
         </li>
     </ol>
+
     <h4>Configuration customization</h4>
     <ol>
         <li>
@@ -233,9 +298,6 @@
         </li>
     </ol>
 
-    <!-- <p>-> -> (defaults Win10)</p> -->
-    <!-- <p>Uncheck automatically detect operating system... -> OS type: Windows -> (defaults Win10)</p> -->
-
     <h4 id="virtio">VirtIO Devices (optional)</h4>
     <div class="recommended">
         <!-- <p>
@@ -256,12 +318,6 @@
                     <li><samp>Device model:</samp> <kbd><samp>virtio</samp></kbd></li>
                 </ol>
             </li>
-            <!-- <li>
-                <ol>
-                    <li><kbd><samp>Video QXL</samp></kbd></li>
-                    <li><samp>Model:</samp> <kbd><samp>Virtio</samp></kbd></li>
-                </ol>
-            </li> -->
         </ul>
         <ol>
             <li>
@@ -280,7 +336,7 @@
             <li><samp>Press any key to boot from CD or DVD</samp></li>
         </ol>
 
-        <p><em>If you're too late on your first attempt, do the following:</em></p>
+        <p><em>If you're late on your first attempt, do the following:</em></p>
         <ol>
             <li>
                 <ol>
@@ -327,54 +383,14 @@
             </ol>
         </li>
         <li>
-            <!-- <kbd class="key">Alt</kbd> + <kbd class="key">I</kbd> -->
             <kbd><samp>I don´t have a product key</samp></kbd> 
             <small class="comment">It's more reliable to do this after the hardware stops changing</small>
         </li>
         <li>
-            <!-- <kbd class="key">Alt</kbd> + <kbd class="key">C</kbd> -->
             <kbd><samp>Custom: Install Windows only (advanced)</samp></kbd>
         </li>
     </ol>
     <h5>Loading VFIO drivers (optional)</h5>
-    <!-- Add memory balooning -->
-    <!-- <ol>
-        <li>
-            <kbd class="key">Alt</kbd> + <kbd class="key">L</kbd>
-            <kbd><samp>Load driver</samp></kbd>
-        </li>
-        <li>
-            <kbd class="key">Alt</kbd> + <kbd class="key">B</kbd>
-            <kbd><samp>Browse</samp></kbd>
-        </li>
-        <li>
-            <ol>
-                <li><i>Select <samp>CD Drive (E:) virtio-win</samp></i></li>
-                <li>viostor</li>
-                <li>w10</li>
-                <li>amd64</li>
-            </ol>
-            
-        </li>
-    </ol>
-    <ol>
-        <li>
-            <kbd class="key">Alt</kbd> + <kbd class="key">L</kbd>
-            <kbd><samp>Load driver</samp></kbd>
-        </li>
-        <li>
-            <kbd class="key">Alt</kbd> + <kbd class="key">B</kbd>
-            <kbd><samp>Browse</samp></kbd>
-        </li>
-        <li>
-            <ol>
-                <li><i>Select <samp>CD Drive (E:) virtio-win</samp></i></li>
-                <li>NetKVM</li>
-                <li>w10</li>
-                <li>amd64</li>
-            </ol>
-        </li>
-    </ol> -->
     <ol>
         <li>
             <ol>
@@ -401,10 +417,13 @@
     <ol>
         <li><kbd><samp>Offline account</samp></kbd></li>
         <li><samp>Sign in with Microsoft Instead?</samp> <kbd><samp>No</samp></kbd></li>
-        <li><samp>Create a really memorable password</samp> <kbd><samp>Next</samp></kbd></li>
+        <li>
+            <samp>Create a really memorable password</samp> <kbd><samp>Next</samp></kbd>
+            <small class="comment">Leave empty to login automatically</small>
+        </li>
     </ol>
     <h5>Services (optional)</h5>
-    <p><em>Protect your data/integrity. Just say no.</em></p>
+    <p><em>Protect your data and integrity. Just say no.</em></p>
     <ol>
         <li><samp>Do more with your voice</samp> <strong><kbd><samp>Don't use speech recognition</samp></kbd></strong></li>
         <li><samp>Let Microsoft use your location</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
@@ -414,5 +433,36 @@
         <li><samp>Get tailored experiences with diagnostic data</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
         <li><samp>Let apps use advertising ID</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
     </ol>
+    <h3>Driver workaround (NVIDIA only)</h3>
+    <p>You can successfully install the NVIDIA driver if you disguise the VM</p>
+    <terminal-cli><kbd>sudo virsh --connect qemu:///system</kbd></terminal-cli>
+    <small>Connect the virtual shell to a system instance</small> <!-- of what exactly -->
+
+    <!-- <terminal-edit class="virsh"><samp>virsh #</samp> <kbd>list</kbd>
+        <samp>
+            <pre> Id    Name                           State
+----------------------------------------------------
+ 3     generic                        running</pre>
+        </samp>
+    </terminal-edit> -->
+
+    <terminal-edit class="virsh"><samp>virsh #</samp> <kbd>edit generic</kbd></terminal-edit>
+    <small>Edit the virtual machine named generic</em></small>
+
+    <terminal-edit class="xml">
+        &#x3C;features&#x3E;
+            <span>
+                &#x3C;hyperv&#x3E;
+                    <span class="contrast">&#x3C;vendor_id state=&#x27;on&#x27; value=&#x27;SurelyNotKVM&#x27;/&#x3E;</span>
+                &#x3C;/hyperv&#x3E;
+            </span>
+            <span>
+                &#x3C;kvm&#x3E;
+                    <span class="contrast">&#x3C;hidden state=&#x27;on&#x27;/&#x3E;</span>
+                &#x3C;/kvm&#x3E;
+            </span>
+        &#x3C;/features&#x3E;
+    </terminal-edit>
+    <small>Insert the highlighted XML elements where indicated</small>
 </body>
 </html>
