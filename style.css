@@ -114,3 +114,7 @@ terminal-cli+small {
 .sub-structured ol {
     padding-left: 2em;
 }
+
+.sub-structured ol li::before{
+    content: '⇒'
+}
