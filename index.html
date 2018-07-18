@@ -79,7 +79,7 @@
 
     <!-- <h2>Virtual Function I/O</h2> -->
     <h2>Driver interception</h2>
-    <p>Overriding a normal driver with vfio-pci is necessary to pass the device into the VM later on.</p>
+    <p>Overriding a normal driver with vfio-pci is necessary to pass the device into a VM later on.</p>
     <p>The following somewhat novel approach has a simpler way to load the vfio-pci driver early.</p>
 
     <terminal-cli>
@@ -105,7 +105,7 @@
             </div>
             <div>
                 <span></span>
-                <span>Kernel driver in use: nouveau</span>
+                <span>Kernel driver in use: <span class="notice-difference">nouveau</span></span>
             </div>
             <div>
                 <span>01:00.1</span>
@@ -117,7 +117,7 @@
             </div>
             <div>
                 <span></span>
-                <span>Kernel driver in use: snd_hda_intel</span>
+                <span>Kernel driver in use: <span class="notice-difference">snd_hda_intel</span></span>
             </div>
         </samp>
     </terminal-cli>
@@ -221,9 +221,12 @@
     <!-- <small>Only list VGA controllers among PCI hardware</small> -->
 
     <h2>Virtual Machine Manager</h2>
+    <p>With another equal GPU it's possible to run native games directly on the host if you prefer</p>
+    <p>One for all Linux games and the other for Windows exclusives</p>
 
     <h3>Phase 1</h3>
-    <p>Download 64-bit <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a></p>
+    <p>Download <a target="_blank" href="https://solus-project.com/download/">Solus</a> Budgie</p>
+    <p>Download <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a> 64-bit</p>
     <p>Optionally download <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">drivers</a> for <a href="#virtio">VirtIO devices</a> <small class="comment">Direct link from Fedora</small></p>
 
     <terminal-cli><kbd>sudo eopkg install virt-manager</kbd></terminal-cli>
@@ -247,7 +250,9 @@
 
     <p><kbd class="key">Alt</kbd> + <kbd class="key">F2</kbd> <kbd class="typing">vir</kbd></p>
 
-    <h3>Virtual Machine Creation</h3>
+    <h3>Virtual Machines Creation</h3>
+    <p>For the sake of brevity condensed into one list with the differences marked</p>
+    <p>They can be installed and run simultaneously until they are assigned the same GPU</p>
     <p><em>Go ahead and proceed unless mentioned</em></p>
     <ol>
         <li>
@@ -259,7 +264,7 @@
         <li>
             <ol>
                 <li><kbd><samp>Browse...</samp></kbd></li>
-                <li><i><samp>Choose</samp> the Win10 iso</i></li>
+                <li><i><samp>Choose</samp> the <span class="solus">Solus</span> or <span class="win">Win10</span> iso respectively</i></li>
             </ol>
         </li>
         <li>
@@ -276,7 +281,7 @@
     </ol>
 
     <h4>Configuration customization</h4>
-    <ol>
+    <ul>
         <li>
             <ol>
                 <li><kbd><samp>Overview</samp></kbd></li>
@@ -284,13 +289,14 @@
                 <li><samp>Chipset:</samp> <kbd><samp>Q35</samp></kbd></li>
             </ol>
         </li>
-        <!-- <li class="recommended">
+        <li class="recommended">
+            <!-- Bios setting necessary? -->
             <ol>
                 <li><kbd><samp>CPUs</samp></kbd></li>
                 <li><samp>Model:</samp> <kbd class="typing">host-passthrough</kbd> <small class="comment">You can just type it</small></li>
             </ol>
             <small class="comment">Passthrough the CPU with all it's features</small>
-        </li> -->
+        </li>
         <li class="recommended">
             <ol>
                 <li><kbd><samp>Boot options</samp></kbd></li>
@@ -311,48 +317,60 @@
             <ol>
                 <li><kbd><samp>Disk 1</samp></kbd></li>
                 <li><kbd><samp>Advanced options</samp></kbd></li>
-                <li><samp>Disk bus:</samp> <kbd><samp>SATA</samp></kbd> <i>or..</i></li>
+                <li><samp>Disk bus:</samp> <kbd><samp>VirtIO</samp></kbd></li>
             </ol>
         </li>
-    </ol>
-
-    <h4 id="virtio">VirtIO Devices (optional)</h4>
-    <div class="recommended">
-        <!-- <p>
-            Improve device efficiency with VirtIO
-            Let all possible devices use VirtIO to reduce virtualization overhead for those devices. (Reformulate more concisely)
-        </p> -->
-        <ul>
-            <li>
-                <ol>
-                    <li><kbd><samp>Disk 1</samp></kbd></li>
-                    <li><kbd><samp>Advanced options</samp></kbd></li>
-                    <li><samp>Disk bus:</samp> <kbd><samp>VirtIO</samp></kbd></li>
-                </ol>
-            </li>
-            <li>
-                <ol>
-                    <li><kbd><samp>NIC</samp></kbd></li>
-                    <li><samp>Device model:</samp> <kbd><samp>virtio</samp></kbd></li>
-                </ol>
-            </li>
-        </ul>
+        <li>
+            <ol>
+                <li><kbd><samp>NIC</samp></kbd></li>
+                <li><samp>Device model:</samp> <kbd><samp>virtio</samp></kbd></li>
+            </ol>
+        </li>
+        <small class="comment">VirtIO is recommended since it will improve performance</small>
+    </ul>
         <ol>
             <li>
-                <ol>
+                <ol class="win">
                     <li><kbd><samp>Add Hardware</samp></kbd></li>
                     <li><kbd><samp>Storage</samp></kbd></li>
                     <li><samp>Device type:</samp> <kbd><samp>CDROM device</samp></kbd></li>
                     <li><kbd><samp>Manage...</samp></kbd></li>
                     <li><i><samp>Choose</samp> the virtio-win iso</i></li>
                 </ol>
+                <small class="comment">Add the virtio Windows driver disc (not necessary for Linux)</small>
             </li>
         </ol>
-        <h3>Windows installation</h3>
-       <ol>
+        <ol>
             <li><kbd><samp>✔ Begin Installation</samp></kbd></li>
-            <li><samp>Press any key to boot from CD or DVD</samp></li>
+            <li>
+                <ol>
+                    <li><kbd><samp>View</samp></kbd></li>
+                    <li><kbd><samp>Resize to VM</samp></kbd></li>
+                    <small class="comment">Improve visibility when needed</small>
+                </ol>
+            </li>
         </ol>
+        
+        
+
+
+        <h3>Solus installation</h3>
+        <ol>
+            <li><kbd><samp>Install OS</samp></kbd> <small class="comment">Launch when the desktop is fully loaded</small></li>
+            <li>
+                <ol>
+                    <li><i>Just follow the instructions or proceed with defaults</i></li>
+                    <li><kbd><samp>Restart now</samp></kbd></li>
+                </ol>
+            </li>
+        </ol>
+
+        <h4>Solus upgrade</h4>
+        <terminal-cli><kbd>sudo eopkg upgrade && sudo shutdown -r now</kbd></terminal-cli>
+        <small>Upgrade to the latest release and restart</small>
+
+        <h3>Windows installation</h3>
+        <samp>Press any key to boot from CD or DVD</samp>
 
         <p><em>If you're late on your first attempt, do the following:</em></p>
         <ol>
@@ -388,18 +406,10 @@
                 </ol>
             </li>
         </ol>
-        
-    </div>
      
     <h4>Windows Setup</h4>
     
     <ol>
-        <li>
-            <ol>
-                <li><kbd><samp>View</samp></kbd></li>
-                <li><kbd><samp>Resize to VM</samp></kbd></li>
-            </ol>
-        </li>
         <li>
             <kbd><samp>I don´t have a product key</samp></kbd> 
             <small class="comment">It's more reliable to do this after the hardware stops changing</small>
@@ -452,7 +462,7 @@
         <li><samp>Let apps use advertising ID</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
     </ol>
     <h3>Driver workaround (NVIDIA only)</h3>
-    <p>You can successfully install the NVIDIA driver if you disguise the VM</p>
+    <p>You can successfully install the official NVIDIA driver if you disguise the VM</p>
     <terminal-cli><kbd>sudo virsh --connect qemu:///system</kbd></terminal-cli>
     <small>Connect the virtual shell to a system instance</small> <!-- of what exactly -->
 
