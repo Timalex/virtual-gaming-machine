@@ -93,17 +93,35 @@
 
     <terminal-cli>
         <kbd>lspci -ks 01:00</kbd>
-        <samp>
-            <div>VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)</div>
-            <div>Subsystem: Micro-Star International Co., Ltd. [MSI] GP107 [GeForce GTX 1050 Ti]</div>
-            <div>Kernel driver in use: nvidia</div>
-            <div>01:00.1 Audio device: NVIDIA Corporation GP107 HDMI Audio Controller (rev a1)</div>
-            <div>Subsystem: Micro-Star International Co., Ltd. [MSI] GP107 HDMI Audio Controller</div>
-            <div>Kernel driver in use: snd_hda_intel</div>
+        <!-- Fade sample output except keywords -->
+        <samp class="table">
+            <div>
+                <span>01:00.1</span>
+                <span>VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)</span>
+            </div>
+            <div>
+                <span></span>
+                <span>Subsystem: Micro-Star International Co., Ltd. [MSI] GP107 [GeForce GTX 1050 Ti]</span>
+            </div>
+            <div>
+                <span></span>
+                <span>Kernel driver in use: nouveau</span>
+            </div>
+            <div>
+                <span>01:00.1</span>
+                <span>Audio device: NVIDIA Corporation GP107 HDMI Audio Controller (rev a1)</span>
+            </div>
+            <div>
+                <span></span>
+                <span>Subsystem: Micro-Star International Co., Ltd. [MSI] GP107 HDMI Audio Controller</span>
+            </div>
+            <div>
+                <span></span>
+                <span>Kernel driver in use: snd_hda_intel</span>
+            </div>
         </samp>
     </terminal-cli>
     <small>Show kernel drivers in use on the selected bus and slot</small>
-    <!-- <small>Only list VGA controllers among PCI hardware</small> -->
 
     <terminal-cli>
         <kbd>sudo mkdir /etc/modprobe.d</kbd>
