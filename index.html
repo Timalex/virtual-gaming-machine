@@ -136,7 +136,7 @@
     </terminal-cli>
     <small>Make the directory modprobe.d in /etc</small>
 
-    <i>Edit a new configuration file</i>
+    
     <terminal-cli>
         <kbd>sudo vim /etc/modprobe.d/intercept.conf</kbd>
     </terminal-cli>
@@ -148,9 +148,9 @@
             <br/><span class="yellow">install</span> snd_hda_intel "/sbin/intercept-vfio-intel-audio.sh"
         </kbd>
     </terminal-edit>
-    <small>Refer to shell scripts that should run a custom module installation</small>
+    <small>Edit a new configuration file. Refer to shell scripts that should run a custom module installation</small>
 
-    <i>Edit a new shell script</i>
+    <i></i>
     <terminal-cli>
         <kbd>sudo vim /sbin/intercept-vfio-nouveau.sh</kbd>
     </terminal-cli>
@@ -163,9 +163,9 @@
             <br/>modprobe <span class="salmon">--ignore-install</span> nouveau;
         </kbd>
     </terminal-edit>
-    <small>Override the graphics driver with the vfio-pci module, then install any remaining graphics as normal</small>
+    <small>Edit a new shell script. Override the graphics driver with the vfio-pci module, then install any remaining graphics as normal.</small>
 
-    <i>Edit a new shell script</i>
+    <i></i>
     <terminal-cli>
         <kbd>sudo vim /sbin/intercept-vfio-intel-audio.sh</kbd>
     </terminal-cli>
@@ -179,7 +179,7 @@
             <br/>modprobe <span class="salmon">--ignore-install</span> snd_hda_intel;
         </kbd>
     </terminal-edit>
-    <small>Override the HDMI audio driver and install any remaining compatible audio as normal</small>
+    <small>Edit a new shell script. Override the HDMI audio driver and install any remaining compatible audio as normal.</small>
 
     <terminal-cli>
         <kbd>sudo chmod +x /sbin/intercept-vfio-nouveau.sh</kbd>
