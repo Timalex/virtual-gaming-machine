@@ -207,3 +207,9 @@ ol.inscription {
 
 ol.inscription li {
 }
+
+/* font-kerning normal */
+
+#custom-condensation {
+    transform: matrix(0.98,0.00,0.00,1.00,-6,0);
+}
