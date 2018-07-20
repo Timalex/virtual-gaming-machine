@@ -192,3 +192,18 @@ em em {
     content: '(⛵) ';
     color: #5294E2;
 } */
+
+small ol {
+    margin-top: 0;
+}
+small ol li {
+    display: inline;
+}
+
+ol.inscription {
+    /* list-style: disc outside none;
+    list-style-type: armenian; */
+}
+
+ol.inscription li {
+}
