@@ -129,8 +129,19 @@ terminal-cli+small {
     margin-left: 1em;
 }
 
+/* .xml > span {
+    color: #9e9e9e;
+} */
+
+.xml > span > span {
+    color: white;
+}
+
 .contrast {
     color: white;
+}
+.contrast-lesser {
+    color: #a1a1a1;
 }
 
 .virsh {
@@ -167,6 +178,10 @@ mark {
 
 .notice-difference {
     color: #d0d9ddcc; 
+}
+
+em em {
+    text-decoration: underline;
 }
 
 /* .win::before {

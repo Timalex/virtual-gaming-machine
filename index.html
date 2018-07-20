@@ -10,7 +10,6 @@
     <title>Gaming VMs: The Trivial Guide™</title>
 </head>
 
-<!-- Replace <small> likely with <p>-->
 <body>
     <template id="terminal-edit">
         <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
@@ -63,10 +62,7 @@
         </li>
     </ol>
 
-    <!--     Tip: Alt + F2: term (confirm)
-    Alternatively Super: term
- -->
-    <h3>Verifying IOMMU</h3>
+    <h2>IOMMU grouping</h2>
 
     <!-- add typing effect -->
     <terminal-cli>
@@ -77,26 +73,32 @@
     <small>Ensure <abbr title="I/O Memory Management Unit">IOMMU</abbr> is enabled by successfully listing any units</small>
     <!-- Mention pasting with Ctrl + Shift + V -->
 
-    <!-- <h2>Virtual Function I/O</h2> -->
-    <h2>Driver interception</h2>
-    <p>Overriding a normal driver with vfio-pci is necessary to pass the device into a VM later on.</p>
-    <p>The following somewhat novel approach has a simpler way to load the vfio-pci driver early.</p>
-
+    <!-- <h3>Device identification</h3> -->
     <terminal-cli>
         <kbd>lspci | grep VGA</kbd>
-        <samp>
-            <div>01:00.0 VGA compatible controller: nVidia Corporation G84 [GeForce 8600 GTS] (rev a1)</div>
+        <samp class="table">
+            <div>
+                <span class="notice-difference">01:00.0</span>
+                <span>VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)</span>
+            </div>
         </samp>
     </terminal-cli>
     <small>List PCI video devices</small>
     <!-- <small>Only list VGA controllers among PCI hardware</small> -->
 
     <terminal-cli>
+        <kbd>ls /sys/bus/pci/devices/0000\:01\:00.0/iommu_group/devices/</kbd>
+        <br/>
+        <b>0000:00:01.0  0000:01:00.0  0000:01:00.1</b>
+    </terminal-cli>
+    <small>List all devices in the same IOMMU group</small>
+
+    <terminal-cli>
         <kbd>lspci -ks 01:00</kbd>
         <!-- Fade sample output except keywords -->
         <samp class="table">
             <div>
-                <span>01:00.1</span>
+                <span>01:00.0</span>
                 <span>VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)</span>
             </div>
             <div>
@@ -121,8 +123,14 @@
             </div>
         </samp>
     </terminal-cli>
-    <small>Show kernel drivers in use on the selected bus and slot</small>
+    <small>Show kernel drivers in use on a selected bus and slot</small>
 
+    <!-- <h2>Virtual Function I/O</h2> -->
+    <!-- <h2>Driver interception</h2> -->
+    <h2>Device reservation</h2>
+
+    <p><strong>Override all drivers, in the same IOMMU group, on a bus above zero</strong></p>
+    <p>Driver interception, a simpler way to install the vfio-pci driver early</p>
     <terminal-cli>
         <kbd>sudo mkdir /etc/modprobe.d</kbd>
     </terminal-cli>
@@ -136,24 +144,23 @@
     <!-- Indicate terminal-edits belongs to previous terminal-cli -->
     <terminal-edit>
         <kbd>
-            <span class="yellow">install</span> nvidia "/sbin/intercept-vfio-nvidia.sh"
+            <span class="yellow">install</span> nouveau "/sbin/intercept-vfio-nouveau.sh"
             <br/><span class="yellow">install</span> snd_hda_intel "/sbin/intercept-vfio-intel-audio.sh"
         </kbd>
     </terminal-edit>
     <small>Refer to shell scripts that should run a custom module installation</small>
 
+    <i>Edit a new shell script</i>
     <terminal-cli>
-        <kbd>sudo vim /sbin/intercept-vfio-nvidia.sh</kbd>
+        <kbd>sudo vim /sbin/intercept-vfio-nouveau.sh</kbd>
     </terminal-cli>
-    <small>Edit a new shell script</small>
-
     <terminal-edit>
         <kbd>
             <span class="yellow">echo</span>
             <span class="lavender">vfio-pci</span>
             <span class="yellow">></span> /sys/bus/pci/devices/0000:0<span class="specific-case">1</span>:00.<span class="lavender">0</span>/driver_override;
             <br/>modprobe vfio-pci;
-            <br/>modprobe <span class="salmon">--ignore-install</span> nvidia;
+            <br/>modprobe <span class="salmon">--ignore-install</span> nouveau;
         </kbd>
     </terminal-edit>
     <small>Override the graphics driver with the vfio-pci module, then install any remaining graphics as normal</small>
@@ -175,7 +182,7 @@
     <small>Override the HDMI audio driver and install any remaining compatible audio as normal</small>
 
     <terminal-cli>
-        <kbd>sudo chmod +x /sbin/intercept-vfio-nvidia.sh</kbd>
+        <kbd>sudo chmod +x /sbin/intercept-vfio-nouveau.sh</kbd>
     </terminal-cli>
     <terminal-cli>
         <kbd>sudo chmod +x /sbin/intercept-vfio-intel-audio.sh</kbd>
@@ -227,7 +234,7 @@
     <h3>Phase 1</h3>
     <p>Download <a target="_blank" href="https://solus-project.com/download/">Solus</a> Budgie</p>
     <p>Download <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a> 64-bit</p>
-    <p>Optionally download <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">drivers</a> for <a href="#virtio">VirtIO devices</a> <small class="comment">Direct link from Fedora</small></p>
+    <p>Download <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">VirtIO drivers</a> for Windows <small class="comment">Direct link from Fedora</small></p>
 
     <terminal-cli><kbd>sudo eopkg install virt-manager</kbd></terminal-cli>
     <small>Install Virtual Machine Manager</small>
@@ -356,7 +363,7 @@
 
         <h3>Solus installation</h3>
         <ol>
-            <li><kbd><samp>Install OS</samp></kbd> <small class="comment">Launch when the desktop is fully loaded</small></li>
+            <li><kbd><samp>Install OS</samp></kbd> <small class="comment">Launch it when the desktop is fully loaded</small></li>
             <li>
                 <ol>
                     <li><i>Just follow the instructions or proceed with defaults</i></li>
@@ -364,7 +371,7 @@
                 </ol>
             </li>
         </ol>
-
+        
         <h4>Solus upgrade</h4>
         <terminal-cli><kbd>sudo eopkg upgrade && sudo shutdown -r now</kbd></terminal-cli>
         <small>Upgrade to the latest release and restart</small>
@@ -406,9 +413,8 @@
                 </ol>
             </li>
         </ol>
-     
-    <h4>Windows Setup</h4>
     
+    <p><em>Unless mentioned proceed with defaults and localization</em></p>
     <ol>
         <li>
             <kbd><samp>I don´t have a product key</samp></kbd> 
@@ -418,7 +424,7 @@
             <kbd><samp>Custom: Install Windows only (advanced)</samp></kbd>
         </li>
     </ol>
-    <h5>Loading VFIO drivers (optional)</h5>
+    <h5>Loading VFIO drivers</h5>
     <ol>
         <li>
             <ol>
@@ -481,16 +487,16 @@
         &#x3C;features&#x3E;
             <span>
                 &#x3C;hyperv&#x3E;
-                    <span class="contrast">&#x3C;vendor_id state=&#x27;on&#x27; value=&#x27;SurelyNotKVM&#x27;/&#x3E;</span>
+                    <span>&#x3C;vendor_id state=&#x27;on&#x27; value=&#x27;SurelyNotKVM&#x27;/&#x3E;</span>
                 &#x3C;/hyperv&#x3E;
             </span>
             <span>
                 &#x3C;kvm&#x3E;
-                    <span class="contrast">&#x3C;hidden state=&#x27;on&#x27;/&#x3E;</span>
+                    <span>&#x3C;hidden state=&#x27;on&#x27;/&#x3E;</span>
                 &#x3C;/kvm&#x3E;
             </span>
         &#x3C;/features&#x3E;
     </terminal-edit>
-    <small>Insert the highlighted XML elements where indicated</small>
+    <small>Insert any missing XML elements where indicated</small>
 </body>
 </html>
