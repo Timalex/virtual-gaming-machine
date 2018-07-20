@@ -196,7 +196,7 @@ em em {
 small ol {
     margin-top: 0;
 }
-small ol li {
+small ol li li{
     display: inline;
 }
 
