@@ -232,3 +232,7 @@ ol.inscription li {
 #inxi .opaque span {
     color: #729fcf;
 }
+
+.underline {
+    text-decoration: underline;
+}

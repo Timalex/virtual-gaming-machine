@@ -63,7 +63,7 @@
         </li>
     </ol>
 
-    <small>For AMD it might be known as AMD-V and AMD-Vi(or IOMMU)</small> 
+    <small>For AMD it might be known as AMD-V and AMD-Vi or IOMMU</small> 
     <p><em>Find and consult your mothersboard's manual when necessary</em></p>
 
     <terminal-cli>
@@ -87,7 +87,6 @@
     <small>Ensure <abbr title="I/O Memory Management Unit">IOMMU</abbr> is enabled by successfully listing any units</small>
     <!-- Mention pasting with Ctrl + Shift + V -->
 
-    <!-- <h3>Device identification</h3> -->
     <terminal-cli>
         <kbd>lspci | grep VGA</kbd>
         <samp class="table">
@@ -98,7 +97,6 @@
         </samp>
     </terminal-cli>
     <small>List PCI video devices</small>
-    <!-- <small>Only list VGA controllers among PCI hardware</small> -->
 
     <terminal-cli>
         <kbd>ls /sys/bus/pci/devices/0000\:01\:00.0/iommu_group/devices/</kbd>
@@ -109,7 +107,6 @@
 
     <terminal-cli>
         <kbd>lspci -ks 01:00</kbd>
-        <!-- Fade sample output except keywords -->
         <samp class="table">
             <div>
                 <span>01:00.0</span>
@@ -139,8 +136,6 @@
     </terminal-cli>
     <small>Show kernel drivers in use on a selected bus and slot</small>
 
-    <!-- <h2>Virtual Function I/O</h2> -->
-    <!-- <h2>Driver interception</h2> -->
     <h2>Device reservation</h2>
 
     <p><strong>Override all drivers on a bus above zero, in the same IOMMU group</strong></p>
@@ -154,8 +149,6 @@
     <terminal-cli>
         <kbd>sudo vim /etc/modprobe.d/intercept.conf</kbd>
     </terminal-cli>
-
-    <!-- Indicate terminal-edits belongs to previous terminal-cli -->
     <terminal-edit>
         <kbd>
             <span class="yellow">install</span> nouveau "/sbin/intercept-vfio-nouveau.sh"
@@ -173,7 +166,6 @@
         </ol>
     </small>
 
-    <i></i>
     <terminal-cli>
         <kbd>sudo vim /sbin/intercept-vfio-nouveau.sh</kbd>
     </terminal-cli>
@@ -236,7 +228,6 @@
 
     <terminal-cli>
         <kbd>lspci -ks 01:00</kbd>
-        <!-- Fade sample output except keywords -->
         <samp class="table">
             <div>
                 <span>01:00.1</span>
@@ -265,24 +256,15 @@
         </samp>
     </terminal-cli>
     <small>Show kernel drivers in use on a selected bus and slot</small>
-    <!-- <small>Only list VGA controllers among PCI hardware</small> -->
 
     <h2>Virtual Machine Manager</h2>
-    <p>With another equal GPU it's possible to run native games directly on the host if you prefer</p>
     <p>One for all Linux games and the other for Windows exclusives</p>
 
-    <h3>Phase 1</h3>
     <p>
         Download <a target="_blank" href="https://solus-project.com/download/">Solus</a> Budgie,
         <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a> 64-bit 
         and <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">VirtIO drivers</a> <small class="comment">Direct link from Fedora</small>
-        <!-- and <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">VirtIO drivers</a> for Windows <small class="comment">Direct link from Fedora</small> -->
     </p>
-    <!-- <ul>
-        <li>Download <a target="_blank" href="https://solus-project.com/download/">Solus</a> Budgie</li>
-        <li>Download <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a> 64-bit</li>
-        <li>Download <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">VirtIO drivers</a> for Windows <small class="comment">Direct link from Fedora</small></li>
-    </ul> -->
 
     <terminal-cli><kbd>sudo eopkg install virt-manager</kbd></terminal-cli>
     <small>Install Virtual Machine Manager</small>
@@ -290,24 +272,16 @@
     <terminal-cli><kbd>sudo eopkg install ovmf</kbd></terminal-cli>
     <small>Install Open Virtual Machine Firmware</small>
 
-    <!-- <terminal-cli><kbd>sudo systemctl start libvirtd.service</kbd></terminal-cli>
-    <small>Start the libvirt daemon now</small> -->
-
-    <!-- <terminal-cli class="recommended"></terminal-cliclass><kbd>sudo systemctl enable libvirtd.service</kbd></terminal-cli>
-    <small>Enable autostart of the libvirt daemon and start it now</small> -->
-
     <terminal-cli><kbd>sudo systemctl enable --now libvirtd.service</kbd></terminal-cli>
     <small>Start the libvirt daemon now and enable autostart</small>
 
-    <!-- <terminal-cli class="recommended"><kbd>sudo mv ~/Downloads/Win10_1803_EnglishInternational_x64.iso /var/lib/libvirt/images</kbd></terminal-cli> -->
     <terminal-cli><kbd>sudo mv ~/Downloads/*.iso /var/lib/libvirt/images</kbd></terminal-cli>
     <small>Move all downloaded iso files to a more convenient directory</small>
 
     <!-- <p><kbd class="key">Alt</kbd> + <kbd class="key">F2</kbd> <kbd class="typing">vir</kbd></p> -->
 
     <h3>Virtual Machines Creation</h3>
-    <p>For the sake of brevity condensed into one list with the differences marked</p>
-    <p>They can be installed and run simultaneously until they are assigned the same GPU</p>
+    <p>They can be installed and run simultaneously until they have been assigned the GPU</p>
     <p><em>Go ahead and proceed unless mentioned</em></p>
     <ol>
         <li>
@@ -405,9 +379,6 @@
                 </ol>
             </li>
         </ol>
-        
-        
-
 
         <h3>Solus installation</h3>
         <ol>
@@ -421,8 +392,8 @@
         </ol>
         
         <h4>Solus upgrade</h4>
-        <terminal-cli><kbd>sudo eopkg upgrade && sudo shutdown -r now</kbd></terminal-cli>
-        <small>Upgrade to the latest release and restart</small>
+        <terminal-cli><kbd>sudo eopkg upgrade && sudo shutdown now</kbd></terminal-cli>
+        <small>Upgrade to the latest release and shutdown</small>
 
         <h3>Windows installation</h3>
         <samp>Press any key to boot from CD or DVD</samp>
@@ -455,6 +426,8 @@
                     <li><kbd><samp>View</samp></kbd></li>
                     <li><kbd><samp>🔘 Console</samp></kbd></li>
                 </ol>
+            </li>
+            <li>
                 <ol>
                     <li><kbd><samp>Virtual Machine</samp></kbd></li>
                     <li><kbd><samp>Run</samp></kbd></li>
@@ -466,12 +439,13 @@
     <ol>
         <li>
             <kbd><samp>I don´t have a product key</samp></kbd> 
-            <small class="comment">It's more reliable to do this after the hardware stops changing</small>
+            <small class="comment">It's more reliable to activate after the hardware stops changing</small>
         </li>
         <li>
             <kbd><samp>Custom: Install Windows only (advanced)</samp></kbd>
         </li>
     </ol>
+
     <h5>Loading VFIO drivers</h5>
     <ol>
         <li>
@@ -495,6 +469,7 @@
             </ol>
         </li>
     </ol>
+
     <h5>Account (Optional)</h5>
     <ol>
         <li><kbd><samp>Offline account</samp></kbd></li>
@@ -504,6 +479,7 @@
             <small class="comment">Leave empty to login automatically</small>
         </li>
     </ol>
+
     <h5>Services (optional)</h5>
     <p><em>Protect your data and integrity. Just say no.</em></p>
     <ol>
@@ -515,6 +491,7 @@
         <li><samp>Get tailored experiences with diagnostic data</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
         <li><samp>Let apps use advertising ID</samp> <strong><kbd><samp>No</samp></kbd></strong></li>
     </ol>
+
     <h3>Driver workaround (NVIDIA only)</h3>
     <p>You can successfully install the official NVIDIA driver if you disguise the VM</p>
     <terminal-cli><kbd>sudo virsh --connect qemu:///system</kbd></terminal-cli>
@@ -547,7 +524,9 @@
     </terminal-edit>
     <small>Insert any missing XML elements where indicated</small>
 
-    <h3>Adding GPU hardware to a VM</h3>
+    <h3>Adding real hardware to a VM</h3>
+    <p>The host devices will be <em>exclusively</em> available to the VM when it runs</p>
+    <samp>The device is already in use by other guests</samp> <kbd><samp><strong>Yes</strong></samp></kbd>
     <ol>
         <li>
             <ol>
@@ -570,6 +549,48 @@
                 <li><kbd><samp>PCI Host Device</samp></kbd></li>
                 <li><kbd><samp>0000:01:00.1 NVIDIA Corporation GP107 HDMI Audio Controller</samp></kbd></li>
             </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Add Hardware</samp></kbd></li>
+                <li><kbd><samp>USB Host Device</samp></kbd></li>
+                <li><kbd><samp>001:003 Logitech, Inc. Classic Keyboard 200</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Add Hardware</samp></kbd></li>
+                <li><kbd><samp>USB Host Device</samp></kbd></li>
+                <li><kbd><samp>001:007 Holtek Semiconductor, Inc. USB Gaming Mouse</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Display Spice</samp></kbd></li>
+                <li><kbd><samp>Remove</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Video QXL</samp></kbd></li>
+                <li><kbd><samp>Remove</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Serial 1</samp></kbd></li>
+                <li><kbd><samp>Remove</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Virtual Machine</samp></kbd></li>
+                <li><kbd><samp>Run</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <i>Switch your monitor input to the VM's GPU<i>
+            <small>Not needed with <a href="https://github.com/gnif/LookingGlass" target="_blank">LookingGlass</a></small>
         </li>
     </ol>
 
