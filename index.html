@@ -30,7 +30,8 @@
     <h1>The <span title="Relatively">Trivial</span> Guide™ to<br/>Virtual Machines for Gaming</h1>
     <h2>Hardware virtualization extensions</h2>
     <!-- Add AMD equivalent  -->
-    Example motherboard <i>ASUS Z170-P</i> 
+    <p>Example motherboard for an Intel CPU: </p>
+    <p><i>ASUS Z170-P</i></p>
     <ol class="sub-structured">
         <li>
             <kbd class="key">F2</kbd> <i>Enter BIOS at startup</i> 
@@ -61,6 +62,19 @@
             <kbd class="key">F10</kbd> <i>Save &amp; restart</i>
         </li>
     </ol>
+
+    <small>For AMD it might be known as AMD-V and AMD-Vi(or IOMMU)</small> 
+    <p><em>Find and consult your mothersboard's manual when necessary</em></p>
+
+    <terminal-cli>
+        <kbd>inxi -M</kbd>
+        <samp id="inxi">
+            <div><span>Machine:</span></div>
+            <div><span>Type:</span> Desktop <span>Mobo:</span> ASUSTeK <span class="opaque"><span>model:</span> Z170-P </span><span>v:</span> Rev X.0x </div>
+            <div><span>serial:</span> <root required> <span>UEFI:</span> American Megatrends <span>v:</span> 3805 <span>date:</span> 05/16/2018</div>
+        </samp>
+    </terminal-cli>
+    <small>List some machine data including motherboard model</small>
 
     <h2>IOMMU grouping</h2>
 
@@ -129,7 +143,7 @@
     <!-- <h2>Driver interception</h2> -->
     <h2>Device reservation</h2>
 
-    <p><strong>Override all drivers, in the same IOMMU group, on a bus above zero</strong></p>
+    <p><strong>Override all drivers on a bus above zero, in the same IOMMU group</strong></p>
     <p>Driver interception, a simpler way to install the vfio-pci driver early</p>
     <terminal-cli>
         <kbd>sudo mkdir /etc/modprobe.d</kbd>
@@ -250,7 +264,7 @@
             </div>
         </samp>
     </terminal-cli>
-    <small>Show kernel drivers in use on the selected bus and slot</small>
+    <small>Show kernel drivers in use on a selected bus and slot</small>
     <!-- <small>Only list VGA controllers among PCI hardware</small> -->
 
     <h2>Virtual Machine Manager</h2>
@@ -258,9 +272,17 @@
     <p>One for all Linux games and the other for Windows exclusives</p>
 
     <h3>Phase 1</h3>
-    <p>Download <a target="_blank" href="https://solus-project.com/download/">Solus</a> Budgie</p>
-    <p>Download <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a> 64-bit</p>
-    <p>Download <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">VirtIO drivers</a> for Windows <small class="comment">Direct link from Fedora</small></p>
+    <p>
+        Download <a target="_blank" href="https://solus-project.com/download/">Solus</a> Budgie,
+        <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a> 64-bit 
+        and <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">VirtIO drivers</a> <small class="comment">Direct link from Fedora</small>
+        <!-- and <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">VirtIO drivers</a> for Windows <small class="comment">Direct link from Fedora</small> -->
+    </p>
+    <!-- <ul>
+        <li>Download <a target="_blank" href="https://solus-project.com/download/">Solus</a> Budgie</li>
+        <li>Download <a target="_blank" href="https://www.microsoft.com/software-download/windows10">Windows 10</a> 64-bit</li>
+        <li>Download <a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">VirtIO drivers</a> for Windows <small class="comment">Direct link from Fedora</small></li>
+    </ul> -->
 
     <terminal-cli><kbd>sudo eopkg install virt-manager</kbd></terminal-cli>
     <small>Install Virtual Machine Manager</small>
@@ -281,7 +303,7 @@
     <terminal-cli><kbd>sudo mv ~/Downloads/*.iso /var/lib/libvirt/images</kbd></terminal-cli>
     <small>Move all downloaded iso files to a more convenient directory</small>
 
-    <p><kbd class="key">Alt</kbd> + <kbd class="key">F2</kbd> <kbd class="typing">vir</kbd></p>
+    <!-- <p><kbd class="key">Alt</kbd> + <kbd class="key">F2</kbd> <kbd class="typing">vir</kbd></p> -->
 
     <h3>Virtual Machines Creation</h3>
     <p>For the sake of brevity condensed into one list with the differences marked</p>
@@ -524,5 +546,32 @@
         &#x3C;/features&#x3E;
     </terminal-edit>
     <small>Insert any missing XML elements where indicated</small>
+
+    <h3>Adding GPU hardware to a VM</h3>
+    <ol>
+        <li>
+            <ol>
+                <li><i>Select a VM</i></li>
+                <li><kbd><samp>Open</samp></kbd></li>
+                <li><kbd><samp>View</samp></kbd></li>
+                <li><kbd><samp>🔘 Details</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Add Hardware</samp></kbd></li>
+                <li><kbd><samp>PCI Host Device</samp></kbd></li>
+                <li><kbd><samp>0000:01:00.0 NVIDIA Corporation GP107 [GeForce GTX 1050 Ti]</samp></kbd></li>
+            </ol>
+        </li>
+        <li>
+            <ol>
+                <li><kbd><samp>Add Hardware</samp></kbd></li>
+                <li><kbd><samp>PCI Host Device</samp></kbd></li>
+                <li><kbd><samp>0000:01:00.1 NVIDIA Corporation GP107 HDMI Audio Controller</samp></kbd></li>
+            </ol>
+        </li>
+    </ol>
+
 </body>
 </html>

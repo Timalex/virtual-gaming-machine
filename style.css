@@ -213,3 +213,22 @@ ol.inscription li {
 #custom-condensation {
     transform: matrix(0.98,0.00,0.00,1.00,-6,0);
 }
+
+#inxi span {
+    color: #729fcf80;
+    font-weight: bold;
+}
+
+#inxi div + div {
+    color: #cfd8dc80;
+    /* color: #CFD8DC; */
+    padding-left: 1em;
+}
+
+#inxi .opaque {
+    color: #CFD8DC;
+}
+
+#inxi .opaque span {
+    color: #729fcf;
+}
