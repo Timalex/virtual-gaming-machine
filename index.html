@@ -29,7 +29,6 @@
 
     <h1>The <span title="Relatively">Trivial</span> Guide™ to<br/>Virtual Machines for Gaming</h1>
 
-    <p>I recommended using the editor nano instead, if you are new to vim</p>
     <p class="underline">No introduction here yet</p>
     <small><strong>Enter at your own risk</strong></small>
     <h2>Hardware virtualization extensions</h2>
@@ -140,6 +139,7 @@
     </terminal-cli>
     <small>Show kernel drivers in use on a selected bus and slot</small>
 
+    <small>I recommended using <em>nano</em> instead of vim below</small>
     <h2>Device reservation</h2>
 
     <p><strong>Override all drivers on a bus above zero, in the same IOMMU group</strong></p>
@@ -148,7 +148,6 @@
         <kbd>sudo mkdir /etc/modprobe.d</kbd>
     </terminal-cli>
     <small>Make the directory modprobe.d in /etc</small>
-
     
     <terminal-cli>
         <kbd>sudo vim /etc/modprobe.d/intercept.conf</kbd>
