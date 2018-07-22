@@ -236,3 +236,7 @@ ol.inscription li {
 .underline {
     text-decoration: underline;
 }
+
+body {
+    font-kerning: normal;
+}
