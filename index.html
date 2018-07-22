@@ -29,6 +29,7 @@
 
     <h1>The <span title="Relatively">Trivial</span> Guide™ to<br/>Virtual Machines for Gaming</h1>
 
+    <p>I recommended using the editor nano instead, if you are new to vim</p>
     <p class="underline">No introduction here yet</p>
     <small><strong>Enter at your own risk</strong></small>
     <h2>Hardware virtualization extensions</h2>
@@ -601,6 +602,17 @@
 
     <h3>Check that 3D works</h3>
     <p>Unigine Heaven for <a href="magnet:?xt=urn:btih:5b5ebd0880b075396c34dc87fa68d31ba4eedb33&dn=Unigine%5FHeaven-4.0.run&tr=http%3A%2F%2Fbt.unigine.com%3A8080%2Fannounce">Linux</a> or <a href="https://assets.unigine.com/d/Unigine_Heaven-4.0.exe">Windows</a></p>
+
+    <h3>Installing proprietary drivers</h3>
+
+    <terminal-cli><kbd>sudo eopkg install nvidia-glx-driver-current</kbd></terminal-cli>
+    <small>Install the proprietary NVIDIA driver for the <em>current</em> kernel</small>
+
+    <terminal-cli><kbd>sudo eopkg install nvidia-glx-driver-32bit</kbd></terminal-cli>
+    <small>Install the 32-bit proprietary NVIDIA driver for steam</small>
+
+    <terminal-cli><kbd>sudo eopkg install steam</kbd></terminal-cli>
+    <small>Install Steam (including Linux Steam Integration)</small>
 
     <p>Has this been helpful to you? <em>Any</em> token amount is appreciated. [Button]</p>
 </body>
