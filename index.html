@@ -4,22 +4,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.0.0/webcomponents-bundle.js"></script>
     <script src="terminal/script.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans%7CPT+Serif" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
     <title>Gaming VMs: The Trivial Guide™</title>
 </head>
 
 <body>
     <template id="terminal-edit">
-        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
-        <link href="terminal/edit.css" rel="stylesheet">
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+                margin-top: 1px;
+                padding: 0.1em 0.4em;
+                width: 80ch;
+                border: 1px solid #5fd7f580;
+                border-radius: 0.2em;
+                color: #34E2E2;
+                background-color: #404a4ff2;
+                font-family: monospace;
+                font-size: 13px;
+            }
+
+            samp::slotted(kbd) {
+                color: #CFD8DC;
+                font-family: monospace;
+                font-size: 13px;
+            }
+        </style>
         <samp>
             <slot></slot>
         </samp>
     </template>
     <template id="terminal-cli">
-        <link href="terminal/cli.css" rel="stylesheet">
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+                margin-top: 1px;
+                padding: 0.1em 0.4em;
+                width: 80ch;
+                border: 1px solid #5fd7f580;
+                border-radius: 0.2em;
+                color: #34E2E2;
+                background-color: #404a4ff2;
+                font-family: monospace;
+                font-size: 13px;
+            }
+
+            samp::slotted(kbd) {
+                color: #CFD8DC;
+                font-family: monospace;
+                font-size: 13px;
+                user-select: all;
+                word-break: break-all;
+            }
+
+            #user,
+            #symbol {
+                color: #5fd7f5
+            }
+
+            #at,
+            #dir {
+                color: #8a8a88
+            }
+
+            #host {
+                color: #f45fdf
+            }
+        </style>
         <span id="prompt">
             <span id="user">user</span><span id="at">@</span><span id="host">host</span>
             <span id="dir">~</span>
@@ -142,7 +199,7 @@
     <small>I recommended using <em>nano</em> instead of vim below</small>
     <h2>Device reservation</h2>
 
-    <p><strong>Override all drivers on a bus above zero, in the same IOMMU group</strong></p>
+    <p><strong>Override all drivers, on a bus above zero, in the same IOMMU group</strong></p>
     <p>Driver interception, a simpler way to install the vfio-pci driver early</p>
     <terminal-cli>
         <kbd>sudo mkdir /etc/modprobe.d</kbd>
