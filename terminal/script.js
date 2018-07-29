@@ -13,10 +13,6 @@ class TerminalEdit extends HTMLElement {
         this.shadowRoot.appendChild(templateContent)
     }
 
-    connectedCallback() {
-        const templateEdit = document.querySelector('#terminal-edit')
-        ShadyCSS.styleElement(this);
-    }
 }
 
 class TerminalCli extends TerminalEdit {
@@ -28,17 +24,18 @@ class TerminalCli extends TerminalEdit {
 
         // Get template content including styling
         const templateCli = document.querySelector('#terminal-cli')
+        ShadyCSS.prepareTemplate(templateCli, 'terminal-cli')
         const templateContent = templateCli.content.cloneNode(true)
         
         // Insert styling link
-        const link = templateContent.querySelector('link')
+        // const link = templateContent.querySelector('link')
         // this.shadowRoot.firstChild.before(link)
 
-        // Insert prompt before slotted contet
+        // Insert prompt before slotted content
         const prompt = templateContent.querySelector('#prompt')
         const slot = this.shadowRoot.querySelector('slot')
-        ShadyCSS.prepareTemplate(templateCli, 'terminal-cli')
-        slot.before(prompt)
+
+        this.shadowRoot.insertBefore(templateContent, this.shadowRoot.firstChild)
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -46,9 +43,6 @@ class TerminalCli extends TerminalEdit {
         this.shadowRoot.querySelector('#' + name).textContent = newValue
     }
 
-    connectedCallback() {
-        // ShadyCSS.styleElement(this);
-    }
 }
 
 // Define a custom element
