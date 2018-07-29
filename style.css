@@ -23,9 +23,6 @@ i {
     font-size: smaller;
 }
 
-/* dicreet highlight */
-kbd>samp {}
-
 li li+li::before {
     content: '→';
     margin-right: 0.25em;
@@ -54,7 +51,7 @@ body {
 }
 
 samp {
-    font-family: sans-serif;
+    font-family: 'PT Sans';
     font-size: small;
 }
 
